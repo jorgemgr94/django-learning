@@ -13,7 +13,7 @@ class EnvironmentSettings(BaseSettings):
     DB_HOST: str = "localhost"
     DB_PORT: str = "5432"
 
-    REDIS_URL: str = "redis://localhost:6379/0"
+    REDIS_URL: str = "redis://localhost:6380/0"
 
     # Automatically reads from the .env file
     model_config = SettingsConfigDict(
