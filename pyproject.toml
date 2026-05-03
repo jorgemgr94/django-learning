@@ -69,5 +69,7 @@ django_settings_module = "config.settings"
 [[tool.mypy.overrides]]
 module = [
     "celery.*",
+    "django_filters.*",
 ]
 ignore_missing_imports = true
+disallow_subclassing_any = false

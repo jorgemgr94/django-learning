@@ -8,6 +8,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 
 from . import services
+from .filters import PetFilter
 from .models import Organization, Pet, PetStatus
 from .permissions import IsOwnerOrganizationOrReadOnly
 from .schemas import BulkStatusUpdateInput
@@ -30,6 +31,7 @@ class PetViewSet(viewsets.ModelViewSet):  # type: ignore[type-arg]
     search_fields = ["name", "breed", "description"]
     ordering_fields = ["name", "created_at", "birth_date"]
     ordering = ["-name"]
+    filterset_class = PetFilter
 
     queryset = Pet.objects.all()
 
