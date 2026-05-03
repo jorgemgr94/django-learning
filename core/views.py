@@ -36,7 +36,8 @@ class PetViewSet(viewsets.ModelViewSet):  # type: ignore[type-arg]
     ordering = ["-name"]
     filterset_class = PetFilter
 
-    queryset = Pet.objects.all()
+    def get_queryset(self) -> Any:
+        return Pet.objects.select_related("organization").all()
 
     def get_permissions(self) -> list[Any]:
         if self.action in ["list", "retrieve"]:
