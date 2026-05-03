@@ -26,6 +26,7 @@ dev = [
     "django-stubs>=5.0",
     "djangorestframework-stubs>=3.15",
     "ipython>=8.0",
+    "pre-commit>=3.7",
 ]
 
 [tool.pytest.ini_options]
@@ -64,3 +65,9 @@ plugins = ["mypy_django_plugin.main", "mypy_drf_plugin.main", "pydantic.mypy"]
 
 [tool.django-stubs]
 django_settings_module = "config.settings"
+
+[[tool.mypy.overrides]]
+module = [
+    "celery.*",
+]
+ignore_missing_imports = true
