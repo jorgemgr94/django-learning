@@ -1,0 +1,66 @@
+[project]
+name = "conectapelu2"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "django>=5.0",
+    "djangorestframework>=3.15",
+    "djangorestframework-simplejwt>=5.3",
+    "django-filter>=24.0",
+    "psycopg2-binary>=2.9",
+    "pydantic>=2.0",
+    "pydantic-settings>=2.0",
+    "celery>=5.3",
+    "redis>=5.0",
+    "django-celery-results>=2.5",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "pytest-django>=4.8",
+    "pytest-cov>=5.0",
+    "factory-boy>=3.3",
+    "ruff>=0.4",
+    "mypy>=1.10",
+    "django-stubs>=5.0",
+    "djangorestframework-stubs>=3.15",
+    "ipython>=8.0",
+]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings.local"
+python_files = ["tests.py", "test_*.py"]
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle
+    "F",    # pyflakes (real bugs)
+    "I",    # isort (imports)
+    "B",    # flake8-bugbear (real bugs, high priority)
+    "DTZ",  # flake8-datetimez (real timezone bugs)
+    "UP",   # pyupgrade (modernization, code cleanup)
+    "SIM",  # flake8-simplify (readability)
+    "RET",  # flake8-return (return readability)
+    "C4",   # flake8-comprehensions (readability and performance)
+    "TCH",  # flake8-type-checking (startup performance and circular imports)
+    "PT",   # flake8-pytest-style (test quality)
+]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+check_untyped_defs = true
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_return_any = true
+plugins = ["mypy_django_plugin.main", "mypy_drf_plugin.main"]
+
+[tool.django-stubs]
+django_settings_module = "config.settings.local"
