@@ -1,6 +1,7 @@
 from typing import Any
 
 from django.core.exceptions import ValidationError as DjangoValidationError
+from django.db.models import Count
 from pydantic import ValidationError as PydanticValidationError
 from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
@@ -16,8 +17,10 @@ from .serializers import OrganizationSerializer, PetSerializer
 
 
 class OrganizationViewSet(viewsets.ModelViewSet):  # type: ignore[type-arg]
-    queryset = Organization.objects.all()
     serializer_class = OrganizationSerializer
+
+    def get_queryset(self) -> Any:
+        return Organization.objects.annotate(pet_count=Count("pets")).all()
 
     def get_permissions(self) -> list[Any]:
         if self.action in ["list", "retrieve"]:

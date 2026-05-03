@@ -6,9 +6,11 @@ from .models import Organization, Pet
 
 
 class OrganizationSerializer(serializers.ModelSerializer):  # type: ignore[type-arg]
+    pet_count = serializers.IntegerField(read_only=True)
+
     class Meta:
         model = Organization
-        fields = ["id", "name", "email", "created_at"]
+        fields = ["id", "name", "email", "pet_count", "created_at"]
         read_only_fields = ["id", "created_at"]
 
 
