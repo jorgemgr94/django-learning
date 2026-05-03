@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from datetime import date
-from typing import TypedDict
+from typing import Literal, TypedDict
+
+from pydantic import BaseModel, field_validator, model_validator
 
 
 class PetSummary(TypedDict):
@@ -53,3 +55,47 @@ class PetStatusTransition:
 
     def __str__(self) -> str:
         return f"{self.from_status} → {self.to_status}"
+
+
+# == Pydantic ==============================
+class PetStatusChangedPayload(BaseModel):
+    pet_id: int
+    old_status: str
+    new_status: str
+    changed_by_user_id: int | None = None
+
+    @field_validator("new_status")
+    @classmethod
+    def validate_new_status(cls, v: str) -> str:
+        valid = {"submitted", "available", "adopted", "archived"}
+        if v not in valid:
+            raise ValueError(f"Invalid status '{v}'. Must be one of {valid}")
+        return v
+
+
+class BreedInfo(BaseModel):
+    name: str
+    origin: str | None = None
+    temperament: str | None = None
+    life_span: str | None = None
+
+    @field_validator("name")
+    @classmethod
+    def name_not_empty(cls, v: str) -> str:
+        if not v.strip():
+            raise ValueError("Breed name cannot be empty")
+        return v.strip()
+
+
+class BulkStatusUpdateInput(BaseModel):
+    pet_ids: list[int]
+    new_status: Literal["available", "archived"]
+    reason: str = ""
+
+    @model_validator(mode="after")
+    def validate_pet_ids(self) -> "BulkStatusUpdateInput":
+        if not self.pet_ids:
+            raise ValueError("pet_ids cannot be empty")
+        if len(self.pet_ids) > 100:
+            raise ValueError("Cannot update more than 100 pets at once")
+        return self
