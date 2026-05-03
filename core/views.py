@@ -1,12 +1,15 @@
+from typing import Any
+
 from django.core.exceptions import ValidationError as DjangoValidationError
 from pydantic import ValidationError as PydanticValidationError
-from rest_framework import status, viewsets
+from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.request import Request
 from rest_framework.response import Response
 
 from . import services
 from .models import Organization, Pet, PetStatus
+from .permissions import IsOwnerOrganizationOrReadOnly
 from .schemas import BulkStatusUpdateInput
 from .serializers import OrganizationSerializer, PetSerializer
 
@@ -14,6 +17,12 @@ from .serializers import OrganizationSerializer, PetSerializer
 class OrganizationViewSet(viewsets.ModelViewSet):  # type: ignore[type-arg]
     queryset = Organization.objects.all()
     serializer_class = OrganizationSerializer
+
+    def get_permissions(self) -> list[Any]:
+        if self.action in ["list", "retrieve"]:
+            return [permissions.AllowAny()]
+
+        return [permissions.IsAuthenticated(), IsOwnerOrganizationOrReadOnly()]
 
 
 class PetViewSet(viewsets.ModelViewSet):  # type: ignore[type-arg]
@@ -23,6 +32,12 @@ class PetViewSet(viewsets.ModelViewSet):  # type: ignore[type-arg]
     ordering = ["-name"]
 
     queryset = Pet.objects.all()
+
+    def get_permissions(self) -> list[Any]:
+        if self.action in ["list", "retrieve"]:
+            return [permissions.AllowAny()]
+
+        return [permissions.IsAuthenticated(), IsOwnerOrganizationOrReadOnly()]
 
     @action(detail=True, methods=["post"], url_path="change-status")
     def change_status(self, request: Request, pk: str | None = None) -> Response:
