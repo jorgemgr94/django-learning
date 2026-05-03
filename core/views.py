@@ -20,7 +20,7 @@ class PetViewSet(viewsets.ModelViewSet):  # type: ignore[type-arg]
     serializer_class = PetSerializer
     search_fields = ["name", "breed", "description"]
     ordering_fields = ["name", "created_at", "birth_date"]
-    ordering = ["-created_at"]
+    ordering = ["-name"]
 
     queryset = Pet.objects.all()
 
