@@ -31,6 +31,7 @@ class PetOrigin(models.TextChoices):
 
 
 class Organization(models.Model):
+    id: int
     name = models.CharField(max_length=150)
     email = models.EmailField(unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -44,6 +45,7 @@ class Organization(models.Model):
 
 
 class Pet(models.Model):
+    id: int
     organization = models.ForeignKey(
         Organization,
         on_delete=models.CASCADE,
@@ -71,6 +73,8 @@ class Pet(models.Model):
     image = models.URLField(blank=True, default="")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    objects: models.Manager["Pet"]
 
     class Meta:
         ordering = ["-created_at"]
