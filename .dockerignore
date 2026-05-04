@@ -1,0 +1,15 @@
+# Virtualenv is host-specific; recreate in the image (uv Docker guide).
+.venv
+.git
+**/__pycache__
+**/*.pyc
+.pytest_cache
+.mypy_cache
+.ruff_cache
+htmlcov
+.coverage
+*.sqlite3
+.env
+.DS_Store
+.idea
+.vscode

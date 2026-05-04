@@ -1,4 +1,4 @@
-.PHONY: setup up down migrate shell serve worker lint test format clean
+.PHONY: setup up down migrate reset-db reset-db-hard shell serve worker lint test format clean
 
 # Initial project setup
 setup:
@@ -20,6 +20,14 @@ down:
 migrate:
 	uv run python manage.py makemigrations
 	uv run python manage.py migrate
+
+# Reset the database
+reset-db:
+	docker-compose up -d db
+	@until docker-compose exec -T db pg_isready -U postgres >/dev/null 2>&1; do sleep 1; done
+	docker-compose exec -T db psql -U postgres -d postgres -c "DROP DATABASE IF EXISTS pets_db WITH (FORCE);"
+	docker-compose exec -T db psql -U postgres -d postgres -c "CREATE DATABASE pets_db OWNER postgres;"
+	@echo "Database reset complete."
 
 # Servers
 serve:

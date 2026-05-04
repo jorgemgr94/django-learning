@@ -34,3 +34,15 @@ make serve
 ```
 
 The API will be available at `http://127.0.0.1:8000/`.
+
+### Settings modules
+
+Django settings live under `config/settings/`:
+
+| `DJANGO_SETTINGS_MODULE` | Use case |
+|------------------------|----------|
+| `config.settings.local` | Default for `manage.py`, Celery, and local `.env` — `DEBUG`, SQL query logging |
+| `config.settings.production` | Docker image / real deploy — HTTPS headers, `CONN_MAX_AGE` |
+| `config.settings.test` | `pytest` (see `pyproject.toml`) |
+
+Copy `.env.example` to `.env` and set at least `SECRET_KEY`. `ALLOWED_HOSTS` accepts comma-separated hosts or a JSON list.

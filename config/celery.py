@@ -2,7 +2,7 @@ import os
 
 from celery import Celery
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.local")
 
 app = Celery("conectapelu2")
 # Read config from Django settings with CELERY_ prefix
